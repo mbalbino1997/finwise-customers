@@ -1,83 +1,148 @@
-import { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import GlobalContext from '../context/GlobalContext';
+import {
+    Container,
+    Grid,
+    Card,
+    CardContent,
+    CardMedia,
+    Box,
+    Typography,
+    Chip,
+    Stack,
+} from '@mui/material';
+import StarIcon from '@mui/icons-material/Star';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 
-export default function Home() {
+export default function HomePage() {
     const [accounts, setAccounts] = useState([]);
     const { isLoading, setIsLoading } = useContext(GlobalContext);
 
     useEffect(() => {
         setIsLoading(true);
-        axios.get('http://localhost:8080/api/bankaccount')
-            .then(response => setAccounts(response.data))
-            .catch(error => console.error('Errore nel recupero dei conti correnti:', error))
+        axios
+            .get('/api/bankaccount')
+            .then((res) => {
+                const data = res.data;
+                if (Array.isArray(data)) {
+                    setAccounts(data);
+                } else if (Array.isArray(data.content)) {
+                    setAccounts(data.content);
+                } else {
+                    console.error('Dati inattesi da API:', data);
+                    setAccounts([]);
+                }
+            })
+            .catch((err) => {
+                console.error('Errore nel recupero:', err);
+                setAccounts([]);
+            })
             .finally(() => setIsLoading(false));
     }, [setIsLoading]);
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-indigo-500"></div>
-            </div>
-        );
-    }
-
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 pt-8 pb-12 px-4">
-            <h1 className="text-4xl font-extrabold text-center text-indigo-800 mb-12">
-                Finwise - Panoramica Conti Correnti
-            </h1>
+        <>
+            {/* HERO SECTION AGGIORNATA */}
+            <Box
+                id="hero"
+                sx={{
+                    height: 500,
+                    backgroundImage: 'url(/assets/hero-bg.jpg)',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'common.white',
+                    textAlign: 'center',
+                    px: 2,
+                }}
+            >
+                <Box sx={{ backdropFilter: 'blur(4px)', p: 4, borderRadius: 2, maxWidth: 600 }}>
+                    <Typography variant="h2" sx={{ fontWeight: 'bold', mb: 2 }}>
+                        Abbraccia il futuro delle tue finanze
+                    </Typography>
+                    <Typography variant="h6" sx={{ mb: 4 }}>
+                        Unisciti a migliaia di clienti soddisfatti e scopri la libertà di gestire il tuo denaro con semplicità.
+                    </Typography>
+                    <Stack direction="row" spacing={2} justifyContent="center" flexWrap="wrap">
+                        <Chip icon={<EmojiPeopleIcon />} label="10k+ clienti" color="secondary" />
+                        <Chip icon={<TrendingUpIcon />} label="Crescita garantita" color="secondary" />
+                        <Chip icon={<BusinessCenterIcon />} label="Digital banking" color="secondary" />
+                    </Stack>
+                </Box>
+            </Box>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-                {accounts.map(account => (
-                    <div
-                        key={account.id}
-                        className="bg-white shadow-lg rounded-2xl p-6 border-l-8 border-indigo-500 hover:shadow-2xl transition-shadow"
-                    >
-                        <h2 className="text-xl font-semibold text-indigo-700 mb-2">
-                            Conto {account.accountType}
-                        </h2>
-                        <ul className="space-y-1 text-gray-700">
-                            <li><span className="font-medium">Promozione:</span> {account.promotionNumber}</li>
-                            <li><span className="font-medium">Canone Mensile:</span> €{account.monthlyFee.toFixed(2)}</li>
-                            <li><span className="font-medium">Tasso Interesse:</span> {account.interestRate}%</li>
-                            <li><span className="font-medium">Saldo Minimo:</span> €{account.minBalance}</li>
-                        </ul>
-
-                        {account.cards.map(card => (
-                            <div key={card.id} className="mt-6">
-                                <h3 className="text-indigo-600 font-medium text-lg">💳 Carta {card.cardType}</h3>
-                                <p className="text-gray-700"><span className="font-medium">Limite:</span> €{card.spendingLimit}</p>
-
-                                {card.cardPersonals.map(cardP => (
-                                    <div
-                                        key={cardP.id}
-                                        className="bg-indigo-50 mt-4 p-4 rounded-lg border border-indigo-100"
-                                    >
-                                        <div className="flex justify-between">
-                                            <p><span className="font-medium">Numero:</span> {cardP.cardNumber}</p>
-                                            <p><span className="font-medium">Scadenza:</span> {cardP.expirationDate}</p>
-                                        </div>
-                                        <h4 className="mt-3 font-semibold text-indigo-700">📄 Transazioni</h4>
-                                        <ul className="list-disc list-inside mt-2 text-gray-800 space-y-1">
-                                            {cardP.transactions.map(tx => (
-                                                <li key={tx.id} className="flex items-center">
-                                                    <span className={tx.type === 'entrate' ? 'text-green-500' : 'text-red-500'}>
-                                                        {tx.type === 'entrate' ? '⬆️' : '⬇️'}
-                                                    </span>
-                                                    <span className="ml-2">
-                                                        {tx.description} - €{tx.amount} ({tx.date})
-                                                    </span>
-                                                </li>
+            {/* OFFERS SECTION */}
+            <Container id="offers" sx={{ py: 8, backgroundColor: 'grey.100' }}>
+                <Typography variant="h4" align="center" sx={{ fontWeight: 'bold', mb: 6 }}>
+                    Offerte in evidenza
+                </Typography>
+                {isLoading ? (
+                    <Typography align="center">Caricamento offerte...</Typography>
+                ) : (
+                    <Grid container spacing={6}>
+                        {accounts.map((account) => (
+                            <Grid item xs={12} md={6} key={account.id}>
+                                <Card
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: { xs: 'column', sm: 'row' },
+                                        borderRadius: 4,
+                                        boxShadow: 8,
+                                        overflow: 'hidden',
+                                        transition: 'transform 0.3s',
+                                        '&:hover': { transform: 'scale(1.02)' },
+                                    }}
+                                >
+                                    <CardMedia
+                                        component="img"
+                                        sx={{ width: { sm: 200 }, height: { xs: 180, sm: 'auto' } }}
+                                        image={`/images/banks/${account.accountType.toLowerCase()}.jpg`}
+                                        alt={account.accountType}
+                                    />
+                                    <CardContent sx={{ flex: 1 }}>
+                                        <Chip
+                                            icon={<StarIcon />}
+                                            label="Top"
+                                            color="secondary"
+                                            size="small"
+                                            sx={{ mb: 1 }}
+                                        />
+                                        <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>
+                                            Conto {account.accountType}
+                                        </Typography>
+                                        <Typography variant="body2" sx={{ mb: 1 }}>
+                                            <strong>Promozione:</strong> {account.promotionNumber}
+                                        </Typography>
+                                        <Typography variant="body2" sx={{ mb: 1 }}>
+                                            <strong>Canone:</strong> €{account.monthlyFee.toFixed(2)}
+                                        </Typography>
+                                        <Typography variant="body2" sx={{ mb: 2 }}>
+                                            <strong>Tasso interesse:</strong> {account.interestRate}%
+                                        </Typography>
+                                        <Stack direction="row" spacing={1} sx={{ mb: 2 }} flexWrap="wrap">
+                                            {account.cards?.map((card, index) => (
+                                                <Chip
+                                                    key={index}
+                                                    icon={<CreditCardIcon />}
+                                                    label={card.cardType}
+                                                    variant="outlined"
+                                                    color="primary"
+                                                />
                                             ))}
-                                        </ul>
-                                    </div>
-                                ))}
-                            </div>
+                                        </Stack>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
                         ))}
-                    </div>
-                ))}
-            </div>
-        </div>
+                    </Grid>
+                )}
+            </Container>
+        </>
     );
 }
