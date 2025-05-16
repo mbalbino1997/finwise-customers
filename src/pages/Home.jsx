@@ -64,6 +64,7 @@ export default function HomePage() {
                     justifyContent: 'center',
                     color: 'common.white',
                     textAlign: 'center',
+                    marginBottom: 2.5,
                 }}
             >
                 <Container maxWidth="lg">
