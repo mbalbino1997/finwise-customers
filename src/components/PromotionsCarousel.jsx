@@ -19,9 +19,10 @@ export default function PromotionsCarousel({ promotions }) {
         dots: true,
         infinite: true,
         speed: 500,
-        slidesToShow: 3,
+        slidesToShow: 4,
         slidesToScroll: 1,
         responsive: [
+            { breakpoint: 1280, settings: { slidesToShow: 3 } },
             { breakpoint: 960, settings: { slidesToShow: 2 } },
             { breakpoint: 600, settings: { slidesToShow: 1 } },
         ],

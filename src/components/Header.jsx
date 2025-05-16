@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography, Button, Container } from '@mui/material';
 import BackgroundImage from '../assets/bank-bg.jpg';
+import FinwiseLogo from './FinwiseLogo'; // 👈 Importa il logo SVG
 
 export default function Header() {
     return (
@@ -16,6 +17,7 @@ export default function Header() {
                 alignItems: 'center',
             }}
         >
+            {/* Overlay scuro */}
             <Box
                 sx={{
                     position: 'absolute',
@@ -27,9 +29,22 @@ export default function Header() {
                 }}
             />
 
+            {/* ✅ Logo posizionato */}
+            <Box
+                sx={{
+                    position: 'absolute',
+                    top: 20,
+                    left: 80,
+                    zIndex: 10,
+                }}
+            >
+                <FinwiseLogo />
+            </Box>
+
+            {/* Testi e bottoni */}
             <Container sx={{ position: 'relative', textAlign: 'center', color: 'common.white' }}>
                 <Typography variant="h3" sx={{ fontWeight: 'bold', textShadow: '2px 2px 6px rgba(0,0,0,0.8)' }}>
-                    Finwise: Conto Corrente Innovativo
+                    Conto Corrente Innovativo
                 </Typography>
                 <Typography variant="h6" sx={{ mt: 1, mb: 3, textShadow: '1px 1px 4px rgba(0,0,0,0.7)' }}>
                     Semplifica le tue finanze con promozioni dedicate e assistenza H24
