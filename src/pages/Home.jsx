@@ -99,7 +99,7 @@ export default function HomePage() {
                     sx={{
                         fontWeight: 800,
                         mb: 6,
-                        fontFamily: 'Nunito, sans-serif',
+                        fontFamily: 'Aeonik Pro Capitalised", sans-serif',
                         fontSize: { xs: '2.5rem', md: '4rem' },
                         color: 'common.white',
                         textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
