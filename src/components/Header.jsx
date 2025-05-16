@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Button, Container } from '@mui/material';
-import BackgroundImage from '../assets/bank-bg.jpg'; // Consigliata immagine di una lobby bancaria moderna
+import BackgroundImage from '../assets/bank-bg.jpg';
 
 export default function Header() {
     return (
@@ -35,7 +35,7 @@ export default function Header() {
                     Semplifica le tue finanze con promozioni dedicate e assistenza H24
                 </Typography>
                 <Box sx={{ display: 'inline-flex', gap: 2 }}>
-                    <Button variant="contained" size="large">
+                    <Button variant="contained" size="large" color="secondary">
                         Scopri di più
                     </Button>
                     <Button variant="outlined" size="large" color="inherit">

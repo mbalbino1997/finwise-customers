@@ -5,6 +5,9 @@ import Footer from "../components/Footer";
 import GlobalContext from "../context/GlobalContext";
 import Loader from "../components/Loader";
 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 const DefaultLayout = () => {
     const { isLoading } = useContext(GlobalContext);
     return (
