@@ -38,13 +38,15 @@ export default function Header() {
                     zIndex: 10,
                 }}
             >
-                <FinwiseLogo />
             </Box>
 
             {/* Testi e bottoni */}
             <Container sx={{ position: 'relative', textAlign: 'center', color: 'common.white' }}>
+                <Typography variant="h1" sx={{ fontWeight: 'bold', textShadow: '2px 2px 6px rgba(0,0,0,0.8)' }}>
+                    Finwise
+                </Typography>
                 <Typography variant="h3" sx={{ fontWeight: 'bold', textShadow: '2px 2px 6px rgba(0,0,0,0.8)' }}>
-                    Conto Corrente Innovativo
+                    Il Conto Corrente Innovativo
                 </Typography>
                 <Typography variant="h6" sx={{ mt: 1, mb: 3, textShadow: '1px 1px 4px rgba(0,0,0,0.7)' }}>
                     Semplifica le tue finanze con promozioni dedicate e assistenza H24

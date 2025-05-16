@@ -17,7 +17,7 @@ export default function FinwiseLogo() {
                     filter="url(#svg_14_blur)"
                     fontFamily="Times"
                     fontSize="320"
-                    fontStyle="normal"
+                    fontStyle="italic"
                     fontWeight="bold"
                     lengthAdjust="spacing"
                     letterSpacing="6"

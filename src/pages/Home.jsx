@@ -55,6 +55,7 @@ export default function HomePage() {
             <Box
                 id="hero"
                 sx={{
+                    position: 'relative',  // posizione relativa al contenitore padre
                     height: 500,
                     backgroundImage: 'url(/assets/hero-bg.jpg)',
                     backgroundSize: 'cover',
@@ -65,10 +66,11 @@ export default function HomePage() {
                     color: 'common.white',
                     textAlign: 'center',
                     marginBottom: 2.5,
+                    overflow: "hidden",
                 }}
             >
                 <Container maxWidth="lg">
-                    <Box sx={{ backdropFilter: 'blur(4px)', p: 4, borderRadius: 2 }}>
+                    <Box sx={{ backdropFilter: 'blur(4px)', p: 4, borderRadius: 2, position: 'relative' }}>
                         <Typography variant="h2" sx={{ fontWeight: 'bold', mb: 2 }}>
                             Abbraccia il futuro delle tue finanze
                         </Typography>
@@ -82,7 +84,85 @@ export default function HomePage() {
                         </Stack>
                     </Box>
                 </Container>
+
+                {/* BANNER TOP */}
+                <Box
+                    sx={{
+                        position: "absolute",
+                        top: 10,
+                        left: 0,
+                        width: "100%",
+                        overflow: "hidden",
+                        pointerEvents: "none",
+                        backgroundColor: "rgba(0,0,0,0.3)",
+                        py: 0.5,
+                        whiteSpace: "nowrap",
+                        animation: "scrollLeftToRight 20s linear infinite",
+                        display: "inline-block",
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: 16,
+                        userSelect: "none",
+                    }}
+                >
+                    {"PartnerOne InnovateX NextGen FinTechPro AlphaCorp BetaSolutions GammaWorks DeltaDynamics EpsilonEnterprises ZetaSystems"
+                        .split(" ")
+                        .map((name, i) => (
+                            <Typography
+                                component="span"
+                                key={i}
+                                sx={{ mx: 3, color: "white", userSelect: "none" }}
+                            >
+                                {name}
+                            </Typography>
+                        ))}
+                </Box>
+
+                {/* BANNER BOTTOM */}
+                <Box
+                    sx={{
+                        position: "absolute",
+                        bottom: 10,
+                        left: 0,
+                        width: "100%",
+                        overflow: "hidden",
+                        pointerEvents: "none",
+                        backgroundColor: "rgba(0,0,0,0.3)",
+                        py: 0.5,
+                        whiteSpace: "nowrap",
+                        animation: "scrollRightToLeft 20s linear infinite",
+                        display: "inline-block",
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: 16,
+                        userSelect: "none",
+                    }}
+                >
+                    {"OmegaPartners SigmaGroup KappaTech LambdaLabs ThetaServices IotaInnovations NuVentures XiCorporation OmicronConsulting PiNetworks"
+                        .split(" ")
+                        .map((name, i) => (
+                            <Typography
+                                component="span"
+                                key={i}
+                                sx={{ mx: 3, color: "white", userSelect: "none" }}
+                            >
+                                {name}
+                            </Typography>
+                        ))}
+                </Box>
+
+                <style>{`
+        @keyframes scrollLeftToRight {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        @keyframes scrollRightToLeft {
+          0% { transform: translateX(100%); }
+          100% { transform: translateX(-100%); }
+        }
+    `}</style>
             </Box>
+
 
             {/* OFFERS SECTION */}
             <Box
