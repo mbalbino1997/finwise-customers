@@ -17,6 +17,7 @@
     "axios": "^1.9.0",
     "classnames": "^2.5.1",
     "finwise-customers": "file:",
+    "framer-motion": "^12.12.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.0",
