@@ -7,34 +7,81 @@ import {
     Box,
     Chip,
     useTheme,
+    styled as muiStyled
 } from '@mui/material';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { styled } from '@mui/system';
 import { motion } from 'framer-motion';
 
+// Styled rectangular card (no rounded corners)
 const GradientCard = styled(Card)(({ theme }) => ({
-    borderRadius: 16,
+    borderRadius: 0,
     background: 'linear-gradient(135deg, #7280c3, #ffa3ff)',
     color: '#fff',
     padding: theme.spacing(2),
     boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
-    minHeight: 250,
+    minHeight: 200,
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+    transition: 'transform 0.3s ease, box-shadow 0.3s ease', // smooth hover transition
+    '&:hover': {
+        transform: 'scale(1.05)',
+        boxShadow: '0 15px 40px rgba(0, 0, 0, 0.5)' // enhanced depth on hover
+    }
+}));
+
+// Oval 3D badge in top-right for validity (purple background, white text and icon)
+const ValidityBadge = muiStyled(Chip)(({ theme }) => ({
+    position: 'absolute',
+    top: theme.spacing(1),
+    right: theme.spacing(1),
+    backgroundColor: '#9c27b0',  // purple
+    color: '#fff',
+    fontWeight: 600,
+    borderRadius: '999px',
+    padding: '4px 12px',
+    boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+    transform: 'rotate(-2deg)',
+    '& .MuiChip-icon': {
+        marginRight: theme.spacing(0.5)
+    },
+    // ensure icon is white
+    '& .MuiChip-icon > svg': {
+        color: '#fff',
+        fill: '#fff'
+    }
 }));
 
 const getAudienceLabel = (audience) => {
     switch (audience) {
-        case 'personal':
-            return 'Privati';
-        case 'business':
-            return 'Aziende';
+        case 'personal': return 'Privati';
+        case 'business': return 'Aziende';
         case 'both':
-        default:
-            return 'Tutti';
+        default: return 'Tutti';
     }
 };
+
+// Wrapper to overlay slides: main slide on top, others shifted
+const SlideWrapper = styled(Box)(() => ({
+    position: 'relative',
+    padding: 0,
+    boxSizing: 'border-box',
+    '&.slick-slide': {
+        transition: 'transform 0.5s',
+    },
+    '&.slick-slide:not(.slick-center)': {
+        transform: 'translateX(-50%) scale(0.9)',
+        zIndex: 1
+    },
+    '&.slick-center': {
+        transform: 'translateX(0) scale(1)',
+        zIndex: 2
+    }
+}));
 
 export default function PromotionsCarousel({ promotions }) {
     const theme = useTheme();
@@ -43,26 +90,16 @@ export default function PromotionsCarousel({ promotions }) {
         dots: false,
         infinite: true,
         speed: 500,
-        slidesToShow: 1,
+        slidesToShow: 3,
         centerMode: true,
-        centerPadding: '120px', // mostra bordi delle card accanto
+        centerPadding: '0px',
         arrows: true,
         nextArrow: <SampleNextArrow />,
-        prevArrow: null,
+        prevArrow: <SamplePrevArrow />,
         responsive: [
-            {
-                breakpoint: 960,
-                settings: {
-                    centerPadding: '60px',
-                },
-            },
-            {
-                breakpoint: 600,
-                settings: {
-                    centerPadding: '0px',
-                },
-            },
-        ],
+            { breakpoint: 960, settings: { slidesToShow: 1, centerMode: true } },
+            { breakpoint: 600, settings: { slidesToShow: 1, centerMode: true } },
+        ]
     };
 
     if (!promotions || promotions.length === 0) {
@@ -70,17 +107,22 @@ export default function PromotionsCarousel({ promotions }) {
     }
 
     return (
-        <Box>
+        <Box sx={{ position: 'relative', overflow: 'hidden', px: 3 }}>
             <Slider {...settings}>
-                {promotions.map((promo, index) => (
-                    <Box key={promo.id} px={1}>
+                {promotions.map((promo) => (
+                    <SlideWrapper key={promo.id} className="slick-slide">
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            initial={{ scale: 0.8 }}
+                            whileInView={{ scale: 1 }}
+                            transition={{ duration: 0.5 }}
                             viewport={{ once: true }}
                         >
                             <GradientCard>
+                                <ValidityBadge
+                                    icon={<CalendarMonthIcon fontSize="small" />}
+                                    label={`${promo.startDate} - ${promo.endDate}`}
+                                    size="small"
+                                />
                                 <CardContent>
                                     <Typography variant="h5" fontWeight={700} gutterBottom>
                                         {promo.name}
@@ -89,42 +131,37 @@ export default function PromotionsCarousel({ promotions }) {
                                         {promo.description}
                                     </Typography>
                                     <Chip
-                                        icon={<CalendarMonthIcon />}
-                                        label={`Dal ${promo.startDate} al ${promo.endDate}`}
-                                        sx={{ mb: 1, mr: 1, color: '#fff', borderColor: '#fff' }}
-                                        variant="outlined"
-                                    />
-                                    <Chip
                                         label={`Destinata a: ${getAudienceLabel(promo.applicableTo)}`}
-                                        sx={{ color: '#fff', borderColor: '#fff' }}
+                                        sx={{ mt: 1, color: '#fff', borderColor: '#fff' }}
                                         variant="outlined"
                                     />
                                 </CardContent>
                             </GradientCard>
                         </motion.div>
-                    </Box>
+                    </SlideWrapper>
                 ))}
             </Slider>
         </Box>
     );
 }
 
-// Freccia custom con doppia >>
-function SampleNextArrow(props) {
-    const { className, onClick } = props;
+// Custom Arrows
+function SampleNextArrow({ className, onClick }) {
     return (
         <div
             className={className}
             onClick={onClick}
-            style={{
-                right: 10,
-                zIndex: 10,
-                fontSize: 24,
-                color: '#fff',
-                cursor: 'pointer',
-            }}
-        >
-            <span style={{ fontSize: '2rem', fontWeight: 'bold' }}>{'>>'}</span>
-        </div>
+            style={{ right: 10, zIndex: 10, fontSize: 24, color: '#fff', cursor: 'pointer' }}
+        />
+    );
+}
+
+function SamplePrevArrow({ className, onClick }) {
+    return (
+        <div
+            className={className}
+            onClick={onClick}
+            style={{ left: 10, zIndex: 10, fontSize: 24, color: '#fff', cursor: 'pointer' }}
+        />
     );
 }
