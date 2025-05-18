@@ -71,23 +71,39 @@ export default function UserPersonal() {
                 </section>
             </div>
 
-            {/* Card Detail Overlay */}
+            {/* Flip-Card Detail */}
             {selectedCard && (
-                <div className="card-detail">
-                    <div className="card-large">
-                        <p className="card-number">
-                            {showDetails ? selectedCard.cardNumber : '**** **** **** ' + selectedCard.cardNumber.slice(-4)}
-                        </p>
-                        <div className="card-info-line">
-                            <span className="expiry">
-                                {showDetails ? selectedCard.expirationDate : '**/**'}
-                            </span>
-                            <span className="cvv">
-                                {showDetails ? selectedCard.cvv : '***'}
-                            </span>
-                            <IconButton size="small" onClick={() => setShowDetails(!showDetails)}>
-                                {showDetails ? <VisibilityOffIcon color="primary" /> : <VisibilityIcon color="primary" />}
-                            </IconButton>
+                <div className="flip-card-detail">
+                    <div className="flip-card">
+                        <div className="flip-card-inner">
+                            <div className="flip-card-front">
+                                <p className="heading_8264">{selectedCard.type ? selectedCard.type.toUpperCase() : 'CARD'}</p>
+                                <svg className="logo" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 48 48">
+                                    <path fill="#ff9800" d="M32 10A14 14 0 1 0 32 38A14 14 0 1 0 32 10Z" />
+                                    <path fill="#d50000" d="M16 10A14 14 0 1 0 16 38A14 14 0 1 0 16 10Z" />
+                                </svg>
+                                <svg className="chip" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 50 50">
+                                    <circle cx="25" cy="25" r="10" fill="#ccc" />
+                                </svg>
+                                <svg className="contactless" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 50 50">
+                                    <path d="M10,25a1,1 0 0 1 10,0" stroke="#fff" strokeWidth="2" fill="none" />
+                                </svg>
+                                <p className="number">
+                                    {showDetails ? selectedCard.cardNumber : '**** **** **** ' + selectedCard.cardNumber.slice(-4)}
+                                </p>
+                                <p className="valid_thru">VALID THRU</p>
+                                <p className="date_8264">
+                                    {showDetails ? selectedCard.expirationDate.replace('-', '/') : selectedCard.expirationDate.slice(2)}
+                                </p>
+                                <p className="name">{profile.firstName.toUpperCase()} {profile.lastName.toUpperCase()}</p>
+                            </div>
+                            <div className="flip-card-back">
+                                <div className="strip" />
+                                <div className="mstrip" />
+                                <div className="sstrip">
+                                    <p className="code">{showDetails ? selectedCard.cvv : '***'}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className="transactions">
