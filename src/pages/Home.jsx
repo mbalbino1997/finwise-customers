@@ -8,14 +8,17 @@ import {
     Chip,
     Stack,
     Button,
+    Modal,
+    TextField,
+    IconButton,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import OffersCarousel from '../components/OffersCarousel';
 import PromotionsCarousel from '../components/PromotionsCarousel';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function HomePage() {
     const [accounts, setAccounts] = useState([]);
@@ -23,6 +26,11 @@ export default function HomePage() {
     const { isLoading, setIsLoading } = useContext(GlobalContext);
     const [promoTitleVisible, setPromoTitleVisible] = useState(false);
     const promoRef = useRef(null);
+    const [openLogin, setOpenLogin] = useState(false);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchHomepageData = async () => {
@@ -42,50 +50,99 @@ export default function HomePage() {
         fetchHomepageData();
     }, [setIsLoading]);
 
-    // INTERSECTION OBSERVER LOGIC
     useEffect(() => {
         const observer = new IntersectionObserver(
-            ([entry]) => {
-                setPromoTitleVisible(entry.isIntersecting);
-            },
-            {
-                threshold: 0.5, // si attiva quando metà è visibile
-            }
+            ([entry]) => setPromoTitleVisible(entry.isIntersecting),
+            { threshold: 0.5 }
         );
-
-        if (promoRef.current) {
-            observer.observe(promoRef.current);
-        }
-
-        return () => {
-            if (promoRef.current) {
-                observer.unobserve(promoRef.current);
-            }
-        };
+        if (promoRef.current) observer.observe(promoRef.current);
+        return () => { if (promoRef.current) observer.unobserve(promoRef.current); };
     }, []);
+
+    const handleOpenLogin = () => setOpenLogin(true);
+    const handleClose = () => {
+        setOpenLogin(false);
+        setUsername('');
+        setPassword('');
+        setError('');
+    };
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setError('');
+        try {
+            const resp = await axios.get('/api/profile', {
+                headers: {
+                    'Authorization': `Basic ${btoa(`${username}:${password}`)}`,
+                },
+            });
+            sessionStorage.setItem('token', resp.data.token);
+            handleClose();
+            navigate('/profile');
+        } catch {
+            setError('Credenziali errate, riprova');
+        }
+    };
 
     return (
         <>
-            {/* BOTTONE AREA PERSONALE */}
-            <Box
-                sx={{
-                    position: 'fixed',
-                    top: 20,
-                    right: 20,
-                    backgroundColor: 'rgba(255,255,255,0.85)',
-                    borderRadius: 1,
-                    p: 1,
-                    boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
-                    zIndex: 9999,
-                }}
-            >
-                <Button component={Link}
-                    to="/profile"
-                    variant="contained"
-                    color="secondary">
+            {/* PERSONALE BUTTON */}
+            <Box sx={{ position: 'fixed', top: 20, right: 20, zIndex: 1400 }}>
+                <Button variant="contained" color="secondary" onClick={handleOpenLogin}>
                     Accedi alla tua area personale
                 </Button>
             </Box>
+
+            {/* LOGIN MODAL */}
+            <Modal open={openLogin} onClose={handleClose}>
+                <Box
+                    component="form"
+                    onSubmit={handleLogin}
+                    sx={{
+                        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                        width: 300, bgcolor: 'background.paper', p: 4, borderRadius: 2,
+                        boxShadow: 24,
+                        background: 'linear-gradient(135deg, #7b1fa2 0%, #9c27b0 100%)',
+                        display: 'flex', flexDirection: 'column', gap: 2,
+                    }}
+                >
+                    {/* Close Button */}
+                    <IconButton
+                        size="small"
+                        onClick={handleClose}
+                        sx={{ position: 'absolute', top: 8, right: 8, color: 'common.white' }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+
+                    <Typography variant="h6" align="center" sx={{ color: 'common.white', mb: 1 }}>
+                        Login
+                    </Typography>
+                    <TextField
+                        fullWidth
+                        variant="filled"
+                        label="Username"
+                        value={username}
+                        onChange={e => setUsername(e.target.value)}
+                        InputLabelProps={{ style: { color: 'rgba(255,255,255,0.8)' } }}
+                        sx={{ input: { color: 'common.white' }, '& .MuiFilledInput-root': { background: 'rgba(255,255,255,0.2)' } }}
+                    />
+                    <TextField
+                        fullWidth
+                        variant="filled"
+                        type="password"
+                        label="Password"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        InputLabelProps={{ style: { color: 'rgba(255,255,255,0.8)' } }}
+                        sx={{ input: { color: 'common.white' }, '& .MuiFilledInput-root': { background: 'rgba(255,255,255,0.2)' } }}
+                    />
+                    {error && <Typography color="error" align="center">{error}</Typography>}
+                    <Button type="submit" variant="contained" fullWidth>
+                        Accedi
+                    </Button>
+                </Box>
+            </Modal>
 
             {/* HERO SECTION */}
             <Box
