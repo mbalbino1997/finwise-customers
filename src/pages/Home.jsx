@@ -14,6 +14,8 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import OffersCarousel from '../components/OffersCarousel';
 import PromotionsCarousel from '../components/PromotionsCarousel';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function HomePage() {
     const [accounts, setAccounts] = useState([]);
@@ -77,7 +79,10 @@ export default function HomePage() {
                     zIndex: 9999,
                 }}
             >
-                <Button variant="contained" color="secondary">
+                <Button component={Link}
+                    to="/profile"
+                    variant="contained"
+                    color="secondary">
                     Accedi alla tua area personale
                 </Button>
             </Box>

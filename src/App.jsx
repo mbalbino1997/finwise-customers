@@ -7,6 +7,7 @@ import { GlobalProvider } from "./context/GlobalContext"; // IMPORTA GlobalProvi
 import { BrowserRouter } from 'react-router-dom';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import UserPersonal from "./pages/UserPersonal";
 function App() {
   return (
     <BrowserRouter>
@@ -14,6 +15,8 @@ function App() {
         <Routes>
           <Route element={<DefaultLayout />} >
             <Route path="/" element={<Home />} />
+            <Route path="/profile" element={<UserPersonal />} />
+            {/* Add other routes here */}
           </Route>
         </Routes>
       </GlobalProvider>
